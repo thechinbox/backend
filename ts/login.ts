@@ -1,3 +1,5 @@
+import {Comun} from './Interfaces/comun';
+
 require('dotenv').config();
 const Pool = require('pg').Pool;
 const pool = new Pool({
@@ -8,13 +10,24 @@ const pool = new Pool({
     port: process.env.DB_PORT
 });
 
-const GETUser= (req:any, res:any) => {
-    pool.query(`SELECT * FROM  usuarios WHERE email = $1`, req.email), (err:any, respuesta:any) => {
-        if (err) {
-            console.error(err);
+const LOGINCCOMUN= (req:any, res:any) => {
+    let comun = new Array<Comun>();
+    
+    pool.query(`SELECT us.rut, us.email, cm.nombres, cm.apellidos, cm.pais, cm.ciudad, cm.telefono FROM usuarios us INNER JOIN comun cm ON cm.rutcomun=us.rut WHERE email = $1 AND clave= $2`,
+        [req.body.email,req.body.clave],(errpool:any, respool:any) => {
+        if (errpool) {
+            console.error(errpool);
             return;
         }else{
-            console.log("exito");
+            for (let row of respool.rows) {
+                comun.push(row)               
+            }
+            res.send(JSON.stringify(comun))
         }
-    }
+    })
+}
+
+
+module.exports = {
+    LOGINCCOMUN
 }

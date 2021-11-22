@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors=require('cors');
 const registrocomun = require('./registro')
+const logincomun = require('./login')
 
 // create application/json parser
 
@@ -16,9 +17,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/registrocomun',bodyParser.json(),registrocomun.PostUsuario);
-
+app.post('/logincomun',bodyParser.json(),logincomun.LOGINCCOMUN)
 app.get("/", (req:any, res:any) => {
-    res.json({ message: "Welcome to bezkoder application." });
+    res.json("Corriendo Servidor");
+    console.log("yep");
 });
 
 app.listen(configuracion, () => {
