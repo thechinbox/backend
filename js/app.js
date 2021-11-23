@@ -6,6 +6,7 @@ var cors = require('cors');
 var registrocomun = require('./registro');
 var logincomun = require('./login');
 var cursos = require('./cursos');
+var curso = require('./curso');
 // create application/json parser
 var configuracion = {
     hostname: "127.0.0.1",
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.post('/registrocomun', bodyParser.json(), registrocomun.PostUsuario);
 app.post('/logincomun', bodyParser.json(), logincomun.LOGINCCOMUN);
+app.post('/getcurso', bodyParser.json(), curso.GETCURSO);
 app.get('/getcursos', cursos.GETCURSOS);
 app.get("/", function (req, res) {
     res.json("Corriendo Servidor");

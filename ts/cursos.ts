@@ -1,6 +1,6 @@
-import {modulo} from './Interfaces/modulo';
+import {modulo} from './Interfaces/modulo'
 import {curso} from './Interfaces/curso'
-
+import {clase} from './Interfaces/clase'
 require('dotenv').config();
 const Pool = require('pg').Pool;
 const pool = new Pool({
@@ -10,17 +10,6 @@ const pool = new Pool({
     password: process.env.DB_PASS,
     port: process.env.DB_PORT
 });
-const pool2 = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASS,
-    port: process.env.DB_PORT
-});
-
-async function GETMOUDULOS() {
-    
-}
 
 const GETCURSOS = (req:any, res:any) => {
     let cursos = new Array<curso>();

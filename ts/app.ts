@@ -5,6 +5,7 @@ const cors=require('cors');
 const registrocomun = require('./registro')
 const logincomun = require('./login')
 const cursos  = require('./cursos')
+const curso = require('./curso')
 
 // create application/json parser
 
@@ -18,7 +19,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/registrocomun',bodyParser.json(),registrocomun.PostUsuario);
-app.post('/logincomun',bodyParser.json(),logincomun.LOGINCCOMUN)
+app.post('/logincomun', bodyParser.json(), logincomun.LOGINCCOMUN)
+app.post('/getcurso', bodyParser.json(), curso.GETCURSO)
 app.get('/getcursos', cursos.GETCURSOS)
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");
