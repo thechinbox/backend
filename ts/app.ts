@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors=require('cors');
 const registrocomun = require('./registro')
 const logincomun = require('./login')
+const cursos  = require('./cursos')
 
 // create application/json parser
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 
 app.post('/registrocomun',bodyParser.json(),registrocomun.PostUsuario);
 app.post('/logincomun',bodyParser.json(),logincomun.LOGINCCOMUN)
+app.get('/getcursos', cursos.GETCURSOS)
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");
     console.log("yep");
