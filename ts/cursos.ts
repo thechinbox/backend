@@ -13,7 +13,7 @@ const pool = new Pool({
 
 const GETCURSOS = (req:any, res:any) => {
     let cursos = new Array<curso>();
-    pool.query( 'SELECT clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro' , (err:any, resp:any)=>{
+    pool.query('SELECT clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro WHERE NOT EXISTS (SELECT clavecurso FROM participante WHERE rutcomun = $1 )', [req.body.rut] , (err:any, resp:any)=>{
         if (err) {
             console.error(err);
             return;

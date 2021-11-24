@@ -19,7 +19,6 @@ var GETCURSO = function (req, res) {
         else {
             for (var _i = 0, _a = resp.rows; _i < _a.length; _i++) {
                 var row = _a[_i];
-                console.log("la row");
                 clases.push(row);
             }
             res.send(JSON.stringify(clases));

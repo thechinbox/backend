@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.post('/registrocomun', bodyParser.json(), registrocomun.PostUsuario);
 app.post('/logincomun', bodyParser.json(), logincomun.LOGINCCOMUN);
 app.post('/getcurso', bodyParser.json(), curso.GETCURSO);
-app.get('/getcursos', cursos.GETCURSOS);
+app.post('/getcursos', bodyParser.json(), cursos.GETCURSOS);
 app.get("/", function (req, res) {
     res.json("Corriendo Servidor");
     console.log("yep");

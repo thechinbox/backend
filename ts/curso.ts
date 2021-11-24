@@ -18,8 +18,6 @@ const GETCURSO = (req:any, res:any) =>{
                 return;
             }else{
                 for(let row of resp.rows){
-                    console.log("la row");
-                    
                     clases.push(row);
                 }
                 res.send(JSON.stringify(clases))
