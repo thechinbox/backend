@@ -1,7 +1,7 @@
 export interface clase{
-    nombremodulo:String;
+    nombremodulo:String |undefined;
     idclase:String;
     nombre:String;
     descripcion:String;
     video:String;
-}
+} 

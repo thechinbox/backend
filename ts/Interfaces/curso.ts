@@ -4,5 +4,5 @@ export interface curso{
     profesor:String;
     nombrecurso:String;
     descripcion:String;
-    modulos:Array<modulo> | undefined;
-}
+    modulos:Array<modulo> ;
+} 

@@ -6,6 +6,7 @@ const registrocomun = require('./registro')
 const logincomun = require('./login')
 const cursos  = require('./cursos')
 const curso = require('./curso')
+const part = require('./participante')
 
 // create application/json parser
 
@@ -21,10 +22,12 @@ app.use(bodyParser.json());
 app.post('/registrocomun',bodyParser.json(),registrocomun.PostUsuario);
 app.post('/logincomun', bodyParser.json(), logincomun.LOGINCCOMUN)
 app.post('/getcurso', bodyParser.json(), curso.GETCURSO)
+app.post('/participar', bodyParser.json(), curso.POST_PARTC)
 app.post('/getcursos', bodyParser.json(), cursos.GETCURSOS)
+app.post('/getpart', bodyParser.json(), part.GETCURSOSPARTC)
+
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");
-    console.log("yep");
 });
 
 app.listen(configuracion, () => {

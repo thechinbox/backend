@@ -1,7 +1,10 @@
+import { clase } from "./clase";
+
 export interface modulo{
     id:number;
     nombre:string;
     video:string;
     descripcion:string;
     duracion:number;
-}
+    clases: Array<clase>;
+} 
