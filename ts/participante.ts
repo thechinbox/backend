@@ -1,6 +1,7 @@
 import {modulo} from './Interfaces/modulo'
 import {curso} from './Interfaces/curso'
 import {clase} from './Interfaces/clase'
+import {progreso} from './Interfaces/progreso'
 require('dotenv').config();
 const Pool = require('pg').Pool;
 const pool = new Pool({
@@ -59,9 +60,26 @@ const GETCURSO_PARTC = (req:any, res:any) =>{
     })
 }
 
+const GETPROGRESO = (req:any, res:any)=>{
+    let progreso:progreso;
+    pool.query('SELECT * FROM tasaavance WHERE (rut = $1 AND clavecurso = $2)',[req.body.rut, Number(req.body.clavecurso)],(err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            for(let row of resp.rows){
+                console.log(row);   
+                progreso = {"clavecurso":row.clavecurso,"rut":row.rut,"idmodulo":row.idmodulo,"idclase":row.idclase};
+            }
+        }
+        res.send(JSON.stringify(progreso))
+    })
+}
+
 module.exports ={
     GETCURSOSPARTC,
-    GETCURSO_PARTC
+    GETCURSO_PARTC,
+    GETPROGRESO
 }
 
 

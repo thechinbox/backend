@@ -55,9 +55,27 @@ var GETCURSO_PARTC = function (req, res) {
         }
     });
 };
+var GETPROGRESO = function (req, res) {
+    var progreso;
+    pool.query('SELECT * FROM tasaavance WHERE (rut = $1 AND clavecurso = $2)', [req.body.rut, Number(req.body.clavecurso)], function (err, resp) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        else {
+            for (var _i = 0, _a = resp.rows; _i < _a.length; _i++) {
+                var row = _a[_i];
+                console.log(row);
+                progreso = { "clavecurso": row.clavecurso, "rut": row.rut, "idmodulo": row.idmodulo, "idclase": row.idclase };
+            }
+        }
+        res.send(JSON.stringify(progreso));
+    });
+};
 module.exports = {
     GETCURSOSPARTC: GETCURSOSPARTC,
-    GETCURSO_PARTC: GETCURSO_PARTC
+    GETCURSO_PARTC: GETCURSO_PARTC,
+    GETPROGRESO: GETPROGRESO
 };
 /*
 const GETCURSOSPARTC = (req:any, res:any)=>{

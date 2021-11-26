@@ -26,6 +26,7 @@ app.post('/participar', bodyParser.json(), curso.POST_PARTC)
 app.post('/getcursos', bodyParser.json(), cursos.GETCURSOS)
 app.post('/getpart', bodyParser.json(), part.GETCURSOSPARTC)
 app.post('/getmicurso', bodyParser.json(), part.GETCURSO_PARTC)
+app.post('/getprogreso', bodyParser.json(), part.GETPROGRESO)
 
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");
