@@ -10,25 +10,35 @@ var pool = new Pool({
     port: process.env.DB_PORT
 });
 var GETCURSO = function (req, res) {
-    var clases = new Array();
-    pool.query('SELECT modulo.nombremodulo, clase.* FROM clase INNER JOIN modulo ON (clase.idmodulo = modulo.idmodulo AND clase.clavecurso = modulo.clavecurso) WHERE modulo.clavecurso = $2 AND modulo.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', [req.body.rut, Number(req.body.clavecurso)], function (err, resp) {
+    var modulos = new Array();
+    pool.query('SELECT mo.nromodulo_curso,mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) WHERE clase.clavecurso = $2 AND clase.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', [req.body.rut, Number(req.body.clavecurso)], function (err, resp) {
         if (err) {
             console.log(err);
             return;
         }
         else {
+            var index_modulo = -1;
+            var ids = new Array();
             for (var _i = 0, _a = resp.rows; _i < _a.length; _i++) {
                 var row = _a[_i];
-                clases.push(row);
-                console.log(row);
+                if (index_modulo == -1) {
+                    modulos.push({ "id": row.idmodulo, "nombre": row.nombremodulo, "nromodulo": row.nromodulo_curso, "descripcion": row.descripcionmodulo, "video": row.video, "clases": new Array() });
+                    index_modulo += 1;
+                    ids.push(row.idmodulo);
+                }
+                if (!ids.includes(row.idmodulo)) {
+                    modulos.push({ "id": row.idmodulo, "nombre": row.nombremodulo, "nromodulo": row.nromodulo_curso, "descripcion": row.descripcionmodulo, "video": row.video, "clases": new Array() });
+                    index_modulo += 1;
+                    ids.push(row.idmodulo);
+                }
+                modulos[index_modulo].clases.push({ "idclase": row.idclase, "nombre": row.nombreclase, "descripcion": row.descripcionclase, "nroclase": row.nroclase_modulo, "video": row.videoclase });
             }
-            console.log(clases);
-            res.send(JSON.stringify(clases));
+            res.send(JSON.stringify(modulos));
         }
     });
 };
 var POST_PARTC = function (req, res) {
-    pool.query('INSERT INTO participante(clavecurso,rutcomun,tasavance,tiempoestudio,finalizado) VALUES($1,$2,0,0,false) ', [req.body.clavecurso, req.body.rut], function (err, resp) {
+    pool.query('INSERT INTO participante(clavecurso,rutcomun,tiempoestudio,finalizado) VALUES($1,$2,0,false) ', [req.body.clavecurso, req.body.rut], function (err, resp) {
         if (err) {
             console.log(err);
             return;
@@ -37,9 +47,6 @@ var POST_PARTC = function (req, res) {
             res.send(JSON.stringify({ "status": "ok" }));
         }
     });
-};
-var GETCURSO_PARTC = function (req, res) {
-    pool.query();
 };
 module.exports = {
     GETCURSO: GETCURSO,

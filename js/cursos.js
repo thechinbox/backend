@@ -11,7 +11,6 @@ var pool = new Pool({
 });
 var GETCURSOS = function (req, res) {
     var cursos = new Array();
-    console.log('aqui estoy en cursos');
     pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  WHERE cu.clavecurso NOT IN (SELECT curs.clavecurso FROM curso curs INNER JOIN participante par ON (par.rutcomun = $1 AND par.clavecurso = curs.clavecurso))', [req.body.rut], function (err, resp) {
         if (err) {
             console.error(err);

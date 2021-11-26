@@ -1,4 +1,6 @@
 import {clase} from './Interfaces/clase'
+import { curso } from './Interfaces/curso';
+import {modulo} from './Interfaces/modulo'
 require('dotenv').config();
 const Pool = require('pg').Pool;
 const pool = new Pool({
@@ -10,26 +12,36 @@ const pool = new Pool({
 });
 
 const GETCURSO = (req:any, res:any) =>{
-    let clases= new Array<clase>();
-    pool.query('SELECT modulo.nombremodulo, clase.* FROM clase INNER JOIN modulo ON (clase.idmodulo = modulo.idmodulo AND clase.clavecurso = modulo.clavecurso) WHERE modulo.clavecurso = $2 AND modulo.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
+    let modulos = new Array<modulo>();
+    pool.query('SELECT mo.nromodulo_curso,mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) WHERE clase.clavecurso = $2 AND clase.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
         [req.body.rut,Number(req.body.clavecurso)],(err:any, resp:any)=>{
             if(err){
                 console.log(err);
                 return;
             }else{
+                let index_modulo = -1;
+                let ids = new Array<number>();
                 for(let row of resp.rows){
-                    clases.push(row);
-                    console.log(row);
+                    if(index_modulo == -1){
+                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "nromodulo":row.nromodulo_curso, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        index_modulo += 1;
+                        ids.push(row.idmodulo)
+                    }
+                    if(!ids.includes(row.idmodulo) ){
+                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "nromodulo":row.nromodulo_curso, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        index_modulo += 1;
+                        ids.push(row.idmodulo)
+                    }
+                    modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase,"nroclase":row.nroclase_modulo,"video":row.videoclase});
                     
                 }
-                console.log(clases);
-                res.send(JSON.stringify(clases))
+                res.send(JSON.stringify(modulos))
             }
-        })
+    })
 }
 
 const POST_PARTC = (req:any, res:any)=>{
-    pool.query('INSERT INTO participante(clavecurso,rutcomun,tasavance,tiempoestudio,finalizado) VALUES($1,$2,0,0,false) ',
+    pool.query('INSERT INTO participante(clavecurso,rutcomun,tiempoestudio,finalizado) VALUES($1,$2,0,false) ',
         [req.body.clavecurso,req.body.rut],(err:any,resp:any)=>{
         if(err){
             console.log(err);
@@ -41,9 +53,6 @@ const POST_PARTC = (req:any, res:any)=>{
     })
 }
 
-const GETCURSO_PARTC = (req:any, res:any) =>{
-    pool.query()
-}
 
 module.exports ={
     GETCURSO,
