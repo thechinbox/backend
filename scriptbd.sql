@@ -147,6 +147,7 @@ CREATE TABLE participante(
 	rutcomun varchar(10) not null,
 	tiempoestudio integer not null,
 	finalizado boolean not null,
+	fechafin DATE,
 	constraint pk_participante primary key (clavecurso, rutcomun),
 	constraint fk_participante_clavecurso foreign key (clavecurso)
 	                      references curso (clavecurso),

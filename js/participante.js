@@ -11,7 +11,7 @@ var pool = new Pool({
 });
 var GETCURSOSPARTC = function (req, res) {
     var cursos = new Array();
-    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  INNER JOIN participante pa ON (pa.rutcomun = $1 AND pa.clavecurso = cu.clavecurso AND pa.finalizado = false)', [req.body.rut], function (err, resp) {
+    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  INNER JOIN participante pa ON (pa.rutcomun = $1 AND pa.clavecurso = cu.clavecurso AND pa.finalizado = false) WHERE cerrado = false ', [req.body.rut], function (err, resp) {
         if (err) {
             console.log(err);
             return;
@@ -65,17 +65,40 @@ var GETPROGRESO = function (req, res) {
         else {
             for (var _i = 0, _a = resp.rows; _i < _a.length; _i++) {
                 var row = _a[_i];
-                console.log(row);
                 progreso = { "clavecurso": row.clavecurso, "rut": row.rut, "idmodulo": row.idmodulo, "idclase": row.idclase };
             }
         }
         res.send(JSON.stringify(progreso));
     });
 };
+var POSTPROG = function (req, res) {
+    pool.query('UPDATE tasaavance  SET idmodulo = $1, idclase = $2 WHERE clavecurso = $3 AND rut = $4', [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut], function (err, resp) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        else {
+            res.send(JSON.stringify({ "status": "ok" }));
+        }
+    });
+};
+var POSTFIN = function (req, res) {
+    pool.query('WITH up_part as ( UPDATE participante SET finalizado = true , fechafin = TO_DATE(NOW()::VARCHAR , \'yyyy/mm/dd\') WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )', [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut], function (err, resp) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        else {
+            res.send(JSON.stringify({ "status": "ok" }));
+        }
+    });
+};
 module.exports = {
     GETCURSOSPARTC: GETCURSOSPARTC,
     GETCURSO_PARTC: GETCURSO_PARTC,
-    GETPROGRESO: GETPROGRESO
+    GETPROGRESO: GETPROGRESO,
+    POSTFIN: POSTFIN,
+    POSTPROG: POSTPROG
 };
 /*
 const GETCURSOSPARTC = (req:any, res:any)=>{

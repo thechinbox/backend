@@ -7,6 +7,7 @@ const logincomun = require('./login')
 const cursos  = require('./cursos')
 const curso = require('./curso')
 const part = require('./participante')
+const certificado = require('./certificado')
 
 // create application/json parser
 
@@ -27,6 +28,9 @@ app.post('/getcursos', bodyParser.json(), cursos.GETCURSOS)
 app.post('/getpart', bodyParser.json(), part.GETCURSOSPARTC)
 app.post('/getmicurso', bodyParser.json(), part.GETCURSO_PARTC)
 app.post('/getprogreso', bodyParser.json(), part.GETPROGRESO)
+app.post('/postfin', bodyParser.json(), part.POSTFIN)
+app.post('/postprogreso', bodyParser.json(), part.POSTPROG)
+app.post('/getcertificados', bodyParser.json(), certificado.GETCERT)
 
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");

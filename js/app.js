@@ -8,6 +8,7 @@ var logincomun = require('./login');
 var cursos = require('./cursos');
 var curso = require('./curso');
 var part = require('./participante');
+var certificado = require('./certificado');
 // create application/json parser
 var configuracion = {
     hostname: "127.0.0.1",
@@ -24,6 +25,9 @@ app.post('/getcursos', bodyParser.json(), cursos.GETCURSOS);
 app.post('/getpart', bodyParser.json(), part.GETCURSOSPARTC);
 app.post('/getmicurso', bodyParser.json(), part.GETCURSO_PARTC);
 app.post('/getprogreso', bodyParser.json(), part.GETPROGRESO);
+app.post('/postfin', bodyParser.json(), part.POSTFIN);
+app.post('/postprogreso', bodyParser.json(), part.POSTPROG);
+app.post('/getcertificados', bodyParser.json(), certificado.GETCERT);
 app.get("/", function (req, res) {
     res.json("Corriendo Servidor");
 });

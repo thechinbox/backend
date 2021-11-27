@@ -14,7 +14,7 @@ const pool = new Pool({
 
 const GETCURSOSPARTC = (req:any, res:any)=>{
     let cursos = new Array<curso>();
-    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  INNER JOIN participante pa ON (pa.rutcomun = $1 AND pa.clavecurso = cu.clavecurso AND pa.finalizado = false)',
+    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  INNER JOIN participante pa ON (pa.rutcomun = $1 AND pa.clavecurso = cu.clavecurso AND pa.finalizado = false) WHERE cerrado = false ',
         [req.body.rut],(err:any, resp:any)=>{  
         if(err){
             console.log(err);
@@ -68,7 +68,6 @@ const GETPROGRESO = (req:any, res:any)=>{
             return;
         }else{
             for(let row of resp.rows){
-                console.log(row);   
                 progreso = {"clavecurso":row.clavecurso,"rut":row.rut,"idmodulo":row.idmodulo,"idclase":row.idclase};
             }
         }
@@ -76,10 +75,35 @@ const GETPROGRESO = (req:any, res:any)=>{
     })
 }
 
+const POSTPROG = (req:any, res:any)=>{
+    pool.query('UPDATE tasaavance  SET idmodulo = $1, idclase = $2 WHERE clavecurso = $3 AND rut = $4',
+    [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut],(err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.send(JSON.stringify({"status":"ok"}))
+        }
+    })
+}
+const POSTFIN = (req:any, res:any)=>{
+    pool.query('WITH up_part as ( UPDATE participante SET finalizado = true , fechafin = TO_DATE(NOW()::VARCHAR , \'yyyy/mm/dd\') WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )',
+    [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut],(err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{            
+            res.send(JSON.stringify({"status":"ok"}))
+        }
+    })
+}
+
 module.exports ={
     GETCURSOSPARTC,
     GETCURSO_PARTC,
-    GETPROGRESO
+    GETPROGRESO,
+    POSTFIN,
+    POSTPROG
 }
 
 
