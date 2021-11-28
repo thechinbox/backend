@@ -24,7 +24,7 @@ CREATE TABLE empresa(
 	logo varchar(150) not null,
 	pais varchar(100) not null,
 	ciudad varchar(100) not null,
-	email varchar(100) not null,
+	telefono varchar(20) not null,
 	descripcion varchar(300) not null,
 	constraint pk_empresa primary key (rutempresa),
 	constraint fk_empresa_rut foreign key (rutempresa)
@@ -60,7 +60,7 @@ CREATE TABLE profesional(
 CREATE TABLE ofertalaboral(
 	idoferta SERIAL ,
 	rutempresa varchar(20) not null,
-	fechapublicacion DATE not null,
+	fechapublicacion TIMESTAMP not null,
 	descripcion varchar(500) not null,
 	ubicacion varchar(150) not null,
 	cargo varchar(50) not null,
@@ -243,4 +243,5 @@ CREATE OR REPLACE FUNCTION ftr_duraciones() RETURNS TRIGGER AS $$
 $$ LANGUAGE plpgsql;
 CREATE TRIGGER tr_duracionmodulo AFTER INSERT ON clase
       FOR EACH ROW EXECUTE PROCEDURE  ftr_duraciones();
-	
+
+

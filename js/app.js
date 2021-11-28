@@ -9,6 +9,7 @@ var cursos = require('./cursos');
 var curso = require('./curso');
 var part = require('./participante');
 var certificado = require('./certificado');
+var ofertas = require('./ofertas');
 // create application/json parser
 var configuracion = {
     hostname: "127.0.0.1",
@@ -28,6 +29,7 @@ app.post('/getprogreso', bodyParser.json(), part.GETPROGRESO);
 app.post('/postfin', bodyParser.json(), part.POSTFIN);
 app.post('/postprogreso', bodyParser.json(), part.POSTPROG);
 app.post('/getcertificados', bodyParser.json(), certificado.GETCERT);
+app.get('/getofertas', ofertas.GETOFERTAS);
 app.get("/", function (req, res) {
     res.json("Corriendo Servidor");
 });

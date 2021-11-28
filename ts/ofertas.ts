@@ -1,3 +1,6 @@
+import { empresa } from "./Interfaces/empresa";
+import { oferta } from "./Interfaces/oferta";
+
 require('dotenv').config();
 const Pool = require('pg').Pool;
 const pool = new Pool({
@@ -9,6 +12,22 @@ const pool = new Pool({
 });
 
 const GETOFERTAS= (req:any, res:any) =>{
-    let ofertas = new Array();
-    pool.query()
+    let ofertas = new Array<oferta>();
+    pool.query('SELECT emp.nombreempresa, emp.pais, emp.ciudad, emp.telefono, emp.descripcion as descripcionem, usr.email, ofl.* FROM ofertalaboral ofl INNER JOIN empresa emp ON emp.rutempresa = ofl.rutempresa INNER JOIN usuarios usr ON usr.rut = ofl.rutempresa WHERE cerrada = false', 
+        (err:any,resp:any)=>{
+        
+        if(err){
+            console.log(err);
+            return;            
+        }else{
+            for(let row of resp.rows){
+                let empresa:empresa = {"rutempresa":row.rutempresa, "email":row.email, "telefono":row.telefono, "pais":row.pais,"ciudad":row.ciudad,"nombreempresa":row.nombreempresa,"descripcion":row.descripcionem};
+                ofertas.push({"idoferta":row.idoferta,"cargo":row.cargo,"descripcion":row.descripcion,"empresa":empresa,"fechapublicacion":row.fechapublicacion,"ubicacion":row.ubicacion})
+            }
+            res.send(JSON.stringify({"status":"ok","lista":ofertas}))
+        }
+    })
+}
+module.exports ={
+    GETOFERTAS
 }

@@ -8,6 +8,7 @@ const cursos  = require('./cursos')
 const curso = require('./curso')
 const part = require('./participante')
 const certificado = require('./certificado')
+const ofertas = require('./ofertas')
 
 // create application/json parser
 
@@ -31,7 +32,7 @@ app.post('/getprogreso', bodyParser.json(), part.GETPROGRESO)
 app.post('/postfin', bodyParser.json(), part.POSTFIN)
 app.post('/postprogreso', bodyParser.json(), part.POSTPROG)
 app.post('/getcertificados', bodyParser.json(), certificado.GETCERT)
-
+app.get('/getofertas',ofertas.GETOFERTAS)
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");
 });
