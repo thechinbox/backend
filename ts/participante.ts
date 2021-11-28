@@ -32,7 +32,7 @@ const GETCURSOSPARTC = (req:any, res:any)=>{
 }
 const GETCURSO_PARTC = (req:any, res:any) =>{
     let curso:curso;
-    pool.query('SELECT CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, cu.nombrecurso, cu.descripcion, mo.nromodulo_curso,mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) INNER JOIN curso cu ON cu.clavecurso = clase.clavecurso INNER JOIN profesional pro ON cu.rutpro = pro.rutpro WHERE clase.clavecurso = $2 AND clase.clavecurso IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
+    pool.query('SELECT CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, cu.nombrecurso, cu.descripcion, mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) INNER JOIN curso cu ON cu.clavecurso = clase.clavecurso INNER JOIN profesional pro ON cu.rutpro = pro.rutpro WHERE clase.clavecurso = $2 AND clase.clavecurso IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
         [req.body.rut,Number(req.body.clavecurso)],(err:any, resp:any)=>{
             if(err){
                 console.log(err);
@@ -52,7 +52,7 @@ const GETCURSO_PARTC = (req:any, res:any) =>{
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
-                    curso.modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase,"video":row.videoclase});
+                    curso.modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase,"video":row.videoclase,"duracionclase":row.duracionclase});
                     
                 }
                 res.send(JSON.stringify(curso))
@@ -76,8 +76,8 @@ const GETPROGRESO = (req:any, res:any)=>{
 }
 
 const POSTPROG = (req:any, res:any)=>{
-    pool.query('UPDATE tasaavance  SET idmodulo = $1, idclase = $2 WHERE clavecurso = $3 AND rut = $4',
-    [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut],(err:any, resp:any)=>{
+    pool.query('WITH up_part as ( UPDATE participante SET tiempoestudio = (tiempoestudio + $5) WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )',
+    [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut, Number(req.body.tiempoestudio)],(err:any, resp:any)=>{
         if(err){
             console.log(err);
             return;

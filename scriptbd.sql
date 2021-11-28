@@ -15,13 +15,17 @@ CREATE TABLE usuarios(
 	constraint pk_usuarios primary key (rut),
 	constraint fk_empresa_rut foreign key (idtipo)
 	                      references tipousuario (idtipo),
-	constraint chk_idtipo check (idtipo = 0 OR idtipo = 1 OR idtipo = 2)
+	constraint chk_idtipo check (idtipo = 1 OR idtipo = 2 OR idtipo = 3)
 );
 
 CREATE TABLE empresa(
 	rutempresa varchar(20) not null,
 	nombreempresa varchar(100) not null,
 	logo varchar(150) not null,
+	pais varchar(100) not null,
+	ciudad varchar(100) not null,
+	email varchar(100) not null,
+	descripcion varchar(300) not null,
 	constraint pk_empresa primary key (rutempresa),
 	constraint fk_empresa_rut foreign key (rutempresa)
 	                      references usuarios (rut)
@@ -56,11 +60,11 @@ CREATE TABLE profesional(
 CREATE TABLE ofertalaboral(
 	idoferta SERIAL ,
 	rutempresa varchar(20) not null,
-	fechapublicacion DATE,
-	descripcion varchar(500),
-	ubicacion varchar(150),
-	cargo varchar(50),
-	etiquetas varchar(200),
+	fechapublicacion DATE not null,
+	descripcion varchar(500) not null,
+	ubicacion varchar(150) not null,
+	cargo varchar(50) not null,
+	cerrada boolean,
 	constraint pk_oferta primary key (idoferta),
 	constraint fk_empresa_oferta foreign key (rutempresa)
 	                      references empresa (rutempresa)
@@ -149,6 +153,14 @@ CREATE TABLE etiquetamodulo(
 	                      references modulo (idmodulo,clavecurso)
 );
 
+CREATE TABLE etiquetaoferta(
+	idoferta integer not null,
+	idetiqueta integer not null,
+	constraint pk_etiqueta_oferta primary key (idoferta, idetiqueta),
+	constraint fk_etiqueta_oferta foreign key (idetiqueta)
+	                      references etiqueta (idetiqueta)
+);
+
 CREATE TABLE participante(
 	clavecurso integer not null,
 	rutcomun varchar(10) not null,
@@ -175,13 +187,13 @@ CREATE TABLE comentario(
 );
 
 CREATE TABLE tasaavance(
-	rut varchar(20),
+	rut varchar(20) not null,
 	clavecurso integer not null,
 	idmodulo integer not null,
 	idclase integer not null,
-	constraint pk_tasaavance primary key (rut, clavecurso, idmodulo, idclase),
-	constraint fk_tasaavance_curso foreign key (clavecurso)
-	                      references curso (clavecurso),
+	constraint pk_tasaavance primary key (rut, clavecurso),
+	constraint fk_tasaavance_cursorut foreign key (clavecurso,rut)
+	                      references participante (clavecurso,rutcomun),
 	constraint fk_tasaavance_modulo foreign key (clavecurso,idmodulo)
 	                      references modulo (clavecurso,idmodulo),
 	constraint fk_tasaavance foreign key (clavecurso,idmodulo,idclase)
@@ -190,23 +202,45 @@ CREATE TABLE tasaavance(
 
 
 ------------------------------TRIGGERS-----------------------------------------------------
+
+-------------------------------TRIGGER Y FUNCION PARA AGREGAR INICIAR A UN PARTICIPANTE EN UN CURSO-----------------------------------------
 CREATE OR REPLACE FUNCTION ftr_tasaavance() RETURNS TRIGGER AS $$
 	DECLARE 
 		rutp varchar(20);
 		clavep integer;
 		aux varchar;
-		idmodulop integer;
-		idclasep integer;
 	BEGIN
 		aux:= SPLIT_PART(NEW::varchar, ',', 1);
 		aux:= SUBSTRING(aux, 2, LENGTH(aux) - 1);
 		clavep := aux::integer;
-		rutp:= SPLIT_PART(NEW::varchar, ',', 2)::integer;
-		idmodulop:= (SELECT idmodulo FROM modulo WHERE (clavecurso = clavep AND nromodulo_curso = 1))::integer;
-		idclasep:= (SELECT idclase FROM clase WHERE (clavecurso = clavep AND idmodulo = idmodulop AND nroclase_modulo = 1))::INTEGER;
-		INSERT INTO tasaavance(rut, clavecurso, idmodulo, idclase) VALUES(rutp, clavep, idmodulop, idclasep);
+		rutp:= SPLIT_PART(NEW::varchar, ',', 2);
+		RAISE NOTICE '%,%', rutp, clavep;
+		INSERT INTO tasaavance(rut, clavecurso, idmodulo, idclase) VALUES(rutp, clavep, 1, 1);
 		RETURN(NEW);
 	END
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER tr_tasaavance BEFORE INSERT ON participante
+CREATE TRIGGER tr_tasaavance AFTER INSERT ON participante
       FOR EACH ROW EXECUTE PROCEDURE  ftr_tasaavance();
+
+
+---------------------TRIGGER Y FUNCION PARA ACTUALIZAR DURACION TIEMPO-----------------------------------
+CREATE OR REPLACE FUNCTION ftr_duraciones() RETURNS TRIGGER AS $$
+	DECLARE 
+		idm integer;
+		clave integer;
+		duracion integer;
+		aux varchar;
+	BEGIN
+		idm:= SPLIT_PART(NEW::varchar, ',', 2)::INTEGER;
+		clave:= SPLIT_PART(NEW::varchar, ',', 3)::INTEGER;
+		aux:= SPLIT_PART(NEW::varchar, ',', 7);
+		duracion:= SUBSTRING(aux, 1, LENGTH(aux) - 1)::INTEGER;
+		RAISE NOTICE '%', duracion;
+		UPDATE curso SET duracioncurso = (duracion + curso.duracioncurso) WHERE clavecurso = clave ;
+		UPDATE modulo SET duracionmodulo = (duracion + modulo.duracionmodulo) WHERE clavecurso = clave AND idmodulo = idm ;
+		RETURN(null);
+	END
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER tr_duracionmodulo AFTER INSERT ON clase
+      FOR EACH ROW EXECUTE PROCEDURE  ftr_duraciones();
+	

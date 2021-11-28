@@ -3,4 +3,5 @@ export interface clase{
     nombre:String;
     descripcion:String;
     video:String;
+    duracionclase:number;
 } 

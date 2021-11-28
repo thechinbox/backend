@@ -13,7 +13,7 @@ const pool = new Pool({
 
 const GETCURSO = (req:any, res:any) =>{
     let modulos = new Array<modulo>();
-    pool.query('SELECT mo.nromodulo_curso,mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) WHERE clase.clavecurso = $2 AND clase.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
+    pool.query('SELECT mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) WHERE clase.clavecurso = $2 AND clase.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
         [req.body.rut,Number(req.body.clavecurso)],(err:any, resp:any)=>{
             if(err){
                 console.log(err);
@@ -32,7 +32,7 @@ const GETCURSO = (req:any, res:any) =>{
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
-                    modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase, "video":row.videoclase});
+                    modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase, "video":row.videoclase, "duracionclase":row.duracionclase});
                     
                 }
                 res.send(JSON.stringify(modulos))
