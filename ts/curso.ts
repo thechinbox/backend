@@ -23,16 +23,16 @@ const GETCURSO = (req:any, res:any) =>{
                 let ids = new Array<number>();
                 for(let row of resp.rows){
                     if(index_modulo == -1){
-                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "nromodulo":row.nromodulo_curso, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
                     if(!ids.includes(row.idmodulo) ){
-                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "nromodulo":row.nromodulo_curso, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
-                    modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase,"nroclase":row.nroclase_modulo,"video":row.videoclase});
+                    modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase, "video":row.videoclase});
                     
                 }
                 res.send(JSON.stringify(modulos))

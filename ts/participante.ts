@@ -43,16 +43,16 @@ const GETCURSO_PARTC = (req:any, res:any) =>{
                 for(let row of resp.rows){
                     if(index_modulo == -1){
                         curso = {"clavecurso":row.clavecurso, "nombrecurso": row.nombrecurso, "profesor":row.profesor,"descripcion":row.descripcion,"modulos":new Array<modulo>()}
-                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "nromodulo":row.nromodulo_curso, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
                     if(!ids.includes(row.idmodulo) ){
-                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "nromodulo":row.nromodulo_curso, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
-                    curso.modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase,"nroclase":row.nroclase_modulo,"video":row.videoclase});
+                    curso.modulos[index_modulo].clases.push({"idclase":row.idclase,"nombre":row.nombreclase,"descripcion":row.descripcionclase,"video":row.videoclase});
                     
                 }
                 res.send(JSON.stringify(curso))
