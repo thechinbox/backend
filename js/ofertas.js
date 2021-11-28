@@ -11,7 +11,7 @@ var pool = new Pool({
 });
 var GETOFERTAS = function (req, res) {
     var ofertas = new Array();
-    pool.query('SELECT emp.nombreempresa, emp.pais, emp.ciudad, emp.telefono, emp.descripcion as descripcionem, usr.email, ofl.* FROM ofertalaboral ofl INNER JOIN empresa emp ON emp.rutempresa = ofl.rutempresa INNER JOIN usuarios usr ON usr.rut = ofl.rutempresa WHERE cerrada = false', function (err, resp) {
+    pool.query('SELECT emp.nombreempresa, emp.pais, emp.ciudad, emp.telefono, emp.descripcion as descripcionem, usr.email, ofl.* FROM ofertalaboral ofl INNER JOIN empresa emp ON emp.rutempresa = ofl.rutempresa INNER JOIN usuarios usr ON usr.rut = ofl.rutempresa WHERE cerrada = false AND idoferta NOT IN (SELECT idoferta FROM solicitudempleo WHERE rut = $1)', [req.body.rut], function (err, resp) {
         if (err) {
             console.log(err);
             return;
@@ -26,6 +26,18 @@ var GETOFERTAS = function (req, res) {
         }
     });
 };
+var POSTPOST = function (req, res) {
+    pool.query('INSERT INTO solicitudempleo(rut, idoferta) VALUES($1, $2)', [req.body.rut, Number(req.body.idoferta)], function (err, resp) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        else {
+            res.send(JSON.stringify({ "status": "ok" }));
+        }
+    });
+};
 module.exports = {
-    GETOFERTAS: GETOFERTAS
+    GETOFERTAS: GETOFERTAS,
+    POSTPOST: POSTPOST
 };

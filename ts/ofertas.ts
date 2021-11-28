@@ -13,8 +13,8 @@ const pool = new Pool({
 
 const GETOFERTAS= (req:any, res:any) =>{
     let ofertas = new Array<oferta>();
-    pool.query('SELECT emp.nombreempresa, emp.pais, emp.ciudad, emp.telefono, emp.descripcion as descripcionem, usr.email, ofl.* FROM ofertalaboral ofl INNER JOIN empresa emp ON emp.rutempresa = ofl.rutempresa INNER JOIN usuarios usr ON usr.rut = ofl.rutempresa WHERE cerrada = false', 
-        (err:any,resp:any)=>{
+    pool.query('SELECT emp.nombreempresa, emp.pais, emp.ciudad, emp.telefono, emp.descripcion as descripcionem, usr.email, ofl.* FROM ofertalaboral ofl INNER JOIN empresa emp ON emp.rutempresa = ofl.rutempresa INNER JOIN usuarios usr ON usr.rut = ofl.rutempresa WHERE cerrada = false AND idoferta NOT IN (SELECT idoferta FROM solicitudempleo WHERE rut = $1)', 
+        [req.body.rut], (err:any,resp:any)=>{
         
         if(err){
             console.log(err);
@@ -28,6 +28,20 @@ const GETOFERTAS= (req:any, res:any) =>{
         }
     })
 }
+
+const POSTPOST = (req:any,res:any)=> {
+    pool.query('INSERT INTO solicitudempleo(rut, idoferta) VALUES($1, $2)',[req.body.rut, Number(req.body.idoferta)], (err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.send(JSON.stringify({"status":"ok"}))
+        }
+    })
+
+}
+
 module.exports ={
-    GETOFERTAS
+    GETOFERTAS,
+    POSTPOST
 }

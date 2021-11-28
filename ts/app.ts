@@ -32,7 +32,8 @@ app.post('/getprogreso', bodyParser.json(), part.GETPROGRESO)
 app.post('/postfin', bodyParser.json(), part.POSTFIN)
 app.post('/postprogreso', bodyParser.json(), part.POSTPROG)
 app.post('/getcertificados', bodyParser.json(), certificado.GETCERT)
-app.get('/getofertas',ofertas.GETOFERTAS)
+app.post('/getofertas',bodyParser.json(),ofertas.GETOFERTAS)
+app.post('/postsolicitud', bodyParser.json(), ofertas.POSTPOST)
 app.get("/", (req:any, res:any) => {
     res.json("Corriendo Servidor");
 });

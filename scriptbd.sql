@@ -74,7 +74,7 @@ CREATE TABLE solicitudempleo(
 	idsolicitud SERIAL,
 	rut varchar(10) not null,
 	idoferta bigint not null,
-	constraint pk_solicitud primary key (idsolicitud),
+	constraint pk_solicitud primary key (idsolicitud,rut,idoferta),
 	constraint fk_solicitud_rut foreign key (rut)
 	                      references comun (rutcomun),
 	constraint fk_solicitud_oferta foreign key (idoferta)

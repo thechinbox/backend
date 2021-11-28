@@ -83,7 +83,7 @@ var POSTPROG = function (req, res) {
     });
 };
 var POSTFIN = function (req, res) {
-    pool.query('WITH up_part as ( UPDATE participante SET finalizado = true , fechafin = TO_DATE(NOW()::VARCHAR , \'yyyy/mm/dd\') WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )', [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut], function (err, resp) {
+    pool.query('WITH up_part as ( UPDATE participante SET tiempoestudio = ( tiempoestudio + $3) finalizado = true , fechafin = TO_DATE(NOW()::VARCHAR , \'yyyy/mm/dd\') WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )', [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut, Number(req.body.tiempoestudio)], function (err, resp) {
         if (err) {
             console.log(err);
             return;
