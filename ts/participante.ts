@@ -14,7 +14,7 @@ const pool = new Pool({
 
 const GETCURSOSPARTC = (req:any, res:any)=>{
     let cursos = new Array<curso>();
-    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  INNER JOIN participante pa ON (pa.rutcomun = $1 AND pa.clavecurso = cu.clavecurso AND pa.finalizado = false) WHERE cerrado = false ',
+    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  INNER JOIN participante pa ON (pa.rutcomun = $1 AND pa.clavecurso = cu.clavecurso AND pa.finalizado = false)',
         [req.body.rut],(err:any, resp:any)=>{  
         if(err){
             console.log(err);

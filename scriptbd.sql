@@ -58,7 +58,7 @@ CREATE TABLE profesional(
 );
 
 CREATE TABLE ofertalaboral(
-	idoferta SERIAL ,
+	idoferta SERIAL not null,
 	rutempresa varchar(20) not null,
 	fechapublicacion TIMESTAMP not null,
 	descripcion varchar(500) not null,
@@ -71,7 +71,7 @@ CREATE TABLE ofertalaboral(
 );
 
 CREATE TABLE solicitudempleo(
-	idsolicitud SERIAL,
+	idsolicitud SERIAL not null,
 	rut varchar(10) not null,
 	idoferta bigint not null,
 	constraint pk_solicitud primary key (idsolicitud,rut,idoferta),
@@ -82,11 +82,12 @@ CREATE TABLE solicitudempleo(
 );
 
 CREATE TABLE curso(
-	clavecurso integer not null,
+	clavecurso SERIAL not null,
 	rutpro varchar(10) not null,
 	nombrecurso varchar(50) not null,
 	descripcion varchar(300) not null,
 	duracioncurso integer not null,
+	publicado boolean not null,
 	cerrado boolean,
 	constraint pk_curso primary key (clavecurso),
 	constraint fk_curso_pro foreign key (rutpro)
@@ -143,7 +144,7 @@ CREATE TABLE etiquetacurso(
 );
 
 CREATE TABLE etiquetamodulo(
-	idetiqueta SERIAL,
+	idetiqueta SERIAL not null,
 	idmodulo integer not null,
 	clavecurso integer not null,
 	constraint pk_etiqueta_modulo primary key (idetiqueta, idmodulo, clavecurso),
@@ -175,7 +176,7 @@ CREATE TABLE participante(
 );
 
 CREATE TABLE comentario(
-	idcomentario SERIAL,
+	idcomentario SERIAL not null,
 	clavecurso integer not null, 
 	rutcomun varchar(10) not null,
 	comentario varchar(300) not null,
