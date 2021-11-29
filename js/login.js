@@ -25,6 +25,24 @@ var LOGINCCOMUN = function (req, res) {
         }
     });
 };
+var LOGINPRO = function (req, res) {
+    var pro;
+    pool.query("SELECT us.rut, us.email, pro.nombres, pro.apellidos, pro.pais, pro.ciudad, pro.telefono, pro.anoegreso, pro.casaestudio FROM usuarios us INNER JOIN profesional pro ON pro.rutpro=us.rut WHERE email = $1 AND clave= $2", [req.body.email, req.body.clave], function (errpool, respool) {
+        if (errpool) {
+            console.error(errpool);
+            return;
+        }
+        else {
+            for (var _i = 0, _a = respool.rows; _i < _a.length; _i++) {
+                var row = _a[_i];
+                console.log(row);
+                pro = row;
+            }
+            res.send(JSON.stringify(pro));
+        }
+    });
+};
 module.exports = {
-    LOGINCCOMUN: LOGINCCOMUN
+    LOGINCCOMUN: LOGINCCOMUN,
+    LOGINPRO: LOGINPRO
 };

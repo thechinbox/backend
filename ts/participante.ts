@@ -87,7 +87,7 @@ const POSTPROG = (req:any, res:any)=>{
     })
 }
 const POSTFIN = (req:any, res:any)=>{
-    pool.query('WITH up_part as ( UPDATE participante SET tiempoestudio = ( tiempoestudio + $3) finalizado = true , fechafin = TO_DATE(NOW()::VARCHAR , \'yyyy/mm/dd\') WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )',
+    pool.query('WITH up_part as ( UPDATE participante SET tiempoestudio = ( tiempoestudio + $5), finalizado = true , fechafin = TO_DATE(NOW()::VARCHAR , \'yyyy/mm/dd\') WHERE clavecurso = $3 AND rutcomun = $4 returning clavecurso , rutcomun) UPDATE tasaavance SET idmodulo = $1 , idclase = $2 WHERE (tasaavance.clavecurso,  tasaavance.rut) IN (SELECT clavecurso, rutcomun FROM up_part )',
     [Number(req.body.idmodulo), Number(req.body.idclase), Number(req.body.clavecurso), req.body.rut, Number(req.body.tiempoestudio)],(err:any, resp:any)=>{
         if(err){
             console.log(err);

@@ -76,7 +76,7 @@ CREATE TABLE solicitudempleo(
 	idoferta bigint not null,
 	constraint pk_solicitud primary key (idsolicitud,rut,idoferta),
 	constraint fk_solicitud_rut foreign key (rut)
-	                      references comun (rutcomun),
+	                      references usuarios (rut),
 	constraint fk_solicitud_oferta foreign key (idoferta)
 	                      references ofertalaboral (idoferta)
 );
@@ -90,8 +90,6 @@ CREATE TABLE curso(
 	publicado boolean not null,
 	cerrado boolean,
 	constraint pk_curso primary key (clavecurso),
-	constraint fk_curso_pro foreign key (rutpro)
-	                      references profesional (rutpro),
 	constraint chk_duracion_curso check (duracioncurso >= 0)
 );
 /*
@@ -106,6 +104,8 @@ CREATE TABLE modulo(
 	descripcionmodulo varchar(300) not null,
 	duracionmodulo integer not null,
 	constraint pk_modulo primary key (idmodulo, clavecurso),
+	constraint pk_modulocurso foreign key (clavecurso)
+	                      references curso (clavecurso),
 	constraint chk_duracion_modulos check (duracionmodulo >= 0)
 );
 

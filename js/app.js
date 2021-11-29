@@ -4,7 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var registrocomun = require('./registro');
-var logincomun = require('./login');
+var login = require('./login');
 var cursos = require('./cursos');
 var curso = require('./curso');
 var part = require('./participante');
@@ -19,7 +19,8 @@ app.use(cors());
 // create application/json parser
 app.use(bodyParser.json());
 app.post('/registrocomun', bodyParser.json(), registrocomun.PostUsuario);
-app.post('/logincomun', bodyParser.json(), logincomun.LOGINCCOMUN);
+app.post('/logincomun', bodyParser.json(), login.LOGINCCOMUN);
+app.post('/loginpro', bodyParser.json(), login.LOGINPRO);
 app.post('/getcurso', bodyParser.json(), curso.GETCURSO);
 app.post('/participar', bodyParser.json(), curso.POST_PARTC);
 app.post('/getcursos', bodyParser.json(), cursos.GETCURSOS);

@@ -21,7 +21,7 @@ const GETCURSO = (req:any, res:any) =>{
             }else{
                 let index_modulo = -1;
                 let ids = new Array<number>();
-                for(let row of resp.rows){
+                for(let row of resp.rows){                   
                     if(index_modulo == -1){
                         modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
                         index_modulo += 1;

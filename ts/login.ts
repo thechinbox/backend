@@ -1,4 +1,5 @@
 import {Comun} from './Interfaces/comun';
+import { profesional } from './Interfaces/profesional';
 
 require('dotenv').config();
 const Pool = require('pg').Pool;
@@ -27,7 +28,26 @@ const LOGINCCOMUN= (req:any, res:any) => {
     })
 }
 
+const LOGINPRO= (req:any, res:any) => {
+    let pro:profesional;
+    
+    pool.query(`SELECT us.rut, us.email, pro.nombres, pro.apellidos, pro.pais, pro.ciudad, pro.telefono, pro.anoegreso, pro.casaestudio FROM usuarios us INNER JOIN profesional pro ON pro.rutpro=us.rut WHERE email = $1 AND clave= $2`,
+        [req.body.email,req.body.clave],(errpool:any, respool:any) => {
+        if (errpool) {
+            console.error(errpool);
+            return;
+        }else{
+            for (let row of respool.rows) {
+                console.log(row);
+                
+                pro = row;               
+            }
+            res.send(JSON.stringify(pro))
+        }
+    })
+}
 
 module.exports = {
-    LOGINCCOMUN
+    LOGINCCOMUN,
+    LOGINPRO
 }
