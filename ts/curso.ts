@@ -13,7 +13,7 @@ const pool = new Pool({
 
 const GETCURSO = (req:any, res:any) =>{
     let modulos = new Array<modulo>();
-    pool.query('SELECT mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) WHERE clase.clavecurso = $2 AND clase.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
+    pool.query('SELECT mo.nombremodulo, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) WHERE clase.clavecurso = $2 AND clase.clavecurso NOT IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
         [req.body.rut,Number(req.body.clavecurso)],(err:any, resp:any)=>{
             if(err){
                 console.log(err);
@@ -23,12 +23,12 @@ const GETCURSO = (req:any, res:any) =>{
                 let ids = new Array<number>();
                 for(let row of resp.rows){                   
                     if(index_modulo == -1){
-                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo,"clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
                     if(!ids.includes(row.idmodulo) ){
-                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo,"clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
@@ -53,8 +53,50 @@ const POST_PARTC = (req:any, res:any)=>{
     })
 }
 
+const POST_CURSO = (req:any, res:any) => {
+    pool.query('INSERT INTO curso(rutpro, nombrecurso,descripcion,duracioncurso,publicado,cerrado) VALUES($1,$2,$3,$4,$5,$6) RETURNING clavecurso',
+    [req.body.rut, req.body.curso.nombrecurso, req.body.curso.descripcion, 0, req.body.publicar, false ], (err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            for(let row of resp.rows){
+                res.send(JSON.stringify({"clavecurso":row.clavecurso}))
+            }
+        }
+    })
+}
+
+const POST_MODULO = (req:any, res:any) => {
+    pool.query('INSERT INTO modulo(clavecurso, idmodulo, nombremodulo, descripcionmodulo, duracionmodulo) VALUES($1,$2,$3,$4,$5)',
+    [Number(req.body.clavecurso.clavecurso), Number(req.body.modulo.id) ,req.body.modulo.nombre, req.body.modulo.descripcion, 0], (err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.send(JSON.stringify({"status":"ok"}))
+        }
+    })
+}
+
+const POST_CLASE= (req:any, res:any) => {
+    pool.query('INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase) VALUES($1,$2,$3,$4,$5,$6,&7)',
+    [Number(req.body.clase.idclase),Number(req.body.idmodulo), Number(req.body.clavecurso.clavecurso), req.body.clase.nombre, req.body.clase.descripcion, req.body.clase.video, 0], (err:any, resp:any)=>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            for(let row of resp.rows){
+                res.send(JSON.stringify({"clavecurso":row.clavecurso}))
+            }
+        }
+    })
+}
 
 module.exports ={
     GETCURSO,
-    POST_PARTC
+    POST_PARTC,
+    POST_CURSO,
+    POST_MODULO,
+    POST_CLASE
 }

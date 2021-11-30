@@ -24,12 +24,12 @@ SELECT * FROM empresa
 ---------------------------------------CURSO 1-------------------------------------------------------------------
 INSERT INTO curso(rutpro,nombrecurso,descripcion,duracioncurso,publicado,cerrado)
 	VALUES('112223334','CURSO DE PRUEBA 1','DESCRIPCION CURSO DE PRUEBA 1',0,false,false);
-INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,video,descripcionmodulo,duracionmodulo)
-	VALUES(1,1,'MODULO DE PRUEBA PARA CURSO 1', 'modulo1curso3240','DESCRIPCION DE MODULO DE PRUEBA 1 CURSO 1',0);
-INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,video,descripcionmodulo,duracionmodulo)
-	VALUES(1,2,'MODULO DE PRUEBA 2 PARA CURSO 1', 'modulo2curso3240','DESCRIPCION DE MODULO DE PRUEBA 2 CURSO 1',0);
-INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,video,descripcionmodulo,duracionmodulo)
-	VALUES(1,3,'MODULO DE PRUEBA 3 PARA CURSO 1', 'modulo3curso3240','DESCRIPCION DE MODULO DE PRUEBA 3 CURSO 1',0);
+INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,descripcionmodulo,duracionmodulo)
+	VALUES(1,1,'MODULO DE PRUEBA PARA CURSO 1','DESCRIPCION DE MODULO DE PRUEBA 1 CURSO 1',0);
+INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,descripcionmodulo,duracionmodulo)
+	VALUES(1,2,'MODULO DE PRUEBA 2 PARA CURSO 1','DESCRIPCION DE MODULO DE PRUEBA 2 CURSO 1',0);
+INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,descripcionmodulo,duracionmodulo)
+	VALUES(1,3,'MODULO DE PRUEBA 3 PARA CURSO 1','DESCRIPCION DE MODULO DE PRUEBA 3 CURSO 1',0);
 INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase)
 	VALUES(1,1,1,'CLASE DE PRUEBA 1 PARA MODULO 1 PARA CURSO 1', 'DESCRIPCION CLASE DE PRUEBA 1 PARA MODULO 1 PARA CURSO 1', 'clase1modulo1curso3240', 20);
 INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase)
@@ -53,12 +53,12 @@ INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, 
 ---------------------------------------CURSO 2-----------------------------------------------------------------------------------
 INSERT INTO curso(rutpro,nombrecurso,descripcion,duracioncurso, publicado, cerrado)
 	VALUES('112223334','CURSO DE PRUEBA 2','DESCRIPCION CURSO DE PRUEBA 2',0,true,false);
-INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,video,descripcionmodulo,duracionmodulo)
-	VALUES(2,1,'MODULO DE PRUEBA 1 PARA CURSO 2', 'modulo1curso2240','DESCRIPCION DE MODULO DE PRUEBA 1 CURSO 2',0);
-INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,video,descripcionmodulo,duracionmodulo)
-	VALUES(2,2,'MODULO DE PRUEBA 2 PARA CURSO 2', 'modulo2curso2240','DESCRIPCION DE MODULO DE PRUEBA 2 CURSO 2',0);
-INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,video,descripcionmodulo,duracionmodulo)
-	VALUES(2,3,'MODULO DE PRUEBA 3 PARA CURSO 2', 'modulo3curso2240','DESCRIPCION DE MODULO DE PRUEBA 3 CURSO 2',0);
+INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,descripcionmodulo,duracionmodulo)
+	VALUES(2,1,'MODULO DE PRUEBA 1 PARA CURSO 2','DESCRIPCION DE MODULO DE PRUEBA 1 CURSO 2',0);
+INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,descripcionmodulo,duracionmodulo)
+	VALUES(2,2,'MODULO DE PRUEBA 2 PARA CURSO 2','DESCRIPCION DE MODULO DE PRUEBA 2 CURSO 2',0);
+INSERT INTO modulo(clavecurso,idmodulo,nombremodulo,descripcionmodulo,duracionmodulo)
+	VALUES(2,3,'MODULO DE PRUEBA 3 PARA CURSO 2','DESCRIPCION DE MODULO DE PRUEBA 3 CURSO 2',0);
 INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase)
 	VALUES(1,1,2,'CLASE DE PRUEBA 1 PARA MODULO 1 PARA CURSO 2', 'DESCRIPCION CLASE DE PRUEBA 1 PARA MODULO 1 PARA CURSO 2', 'clase1modulo1curso2240', 20);
 INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase)

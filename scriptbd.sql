@@ -100,7 +100,6 @@ CREATE TABLE modulo(
 	clavecurso integer not null,
 	idmodulo integer not null,
 	nombremodulo varchar(100) not null,
-	video varchar(300) not null,
 	descripcionmodulo varchar(300) not null,
 	duracionmodulo integer not null,
 	constraint pk_modulo primary key (idmodulo, clavecurso),

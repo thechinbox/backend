@@ -32,7 +32,7 @@ const GETCURSOSPARTC = (req:any, res:any)=>{
 }
 const GETCURSO_PARTC = (req:any, res:any) =>{
     let curso:curso;
-    pool.query('SELECT CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, cu.nombrecurso, cu.descripcion, mo.nombremodulo,mo.video, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) INNER JOIN curso cu ON cu.clavecurso = clase.clavecurso INNER JOIN profesional pro ON cu.rutpro = pro.rutpro WHERE clase.clavecurso = $2 AND clase.clavecurso IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
+    pool.query('SELECT CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, cu.nombrecurso, cu.descripcion, mo.nombremodulo, mo.descripcionmodulo, clase.* FROM clase INNER JOIN modulo mo ON (clase.idmodulo = mo.idmodulo AND clase.clavecurso = mo.clavecurso) INNER JOIN curso cu ON cu.clavecurso = clase.clavecurso INNER JOIN profesional pro ON cu.rutpro = pro.rutpro WHERE clase.clavecurso = $2 AND clase.clavecurso IN (SELECT clavecurso FROM participante WHERE rutcomun = $1)', 
         [req.body.rut,Number(req.body.clavecurso)],(err:any, resp:any)=>{
             if(err){
                 console.log(err);
@@ -43,12 +43,12 @@ const GETCURSO_PARTC = (req:any, res:any) =>{
                 for(let row of resp.rows){
                     if(index_modulo == -1){
                         curso = {"clavecurso":row.clavecurso, "nombrecurso": row.nombrecurso, "profesor":row.profesor,"descripcion":row.descripcion,"modulos":new Array<modulo>()}
-                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo,  "clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
                     if(!ids.includes(row.idmodulo) ){
-                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo, "video":row.video, "clases":new Array<clase>()})
+                        curso.modulos.push({"id":row.idmodulo, "nombre":row.nombremodulo, "descripcion":row.descripcionmodulo,"clases":new Array<clase>()})
                         index_modulo += 1;
                         ids.push(row.idmodulo)
                     }
