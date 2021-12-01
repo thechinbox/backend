@@ -21,6 +21,7 @@ app.use(bodyParser.json());
 app.post('/registrocomun', bodyParser.json(), registrocomun.PostUsuario);
 app.post('/logincomun', bodyParser.json(), login.LOGINCCOMUN);
 app.post('/loginpro', bodyParser.json(), login.LOGINPRO);
+app.post('/loginempresa', bodyParser.json(), login.LOGINEMPRESA);
 app.post('/getcurso', bodyParser.json(), curso.GETCURSO);
 app.post('/postcurso', bodyParser.json(), curso.POST_CURSO);
 app.post('/postmodulo', bodyParser.json(), curso.POST_MODULO);

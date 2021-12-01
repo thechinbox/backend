@@ -41,7 +41,24 @@ var LOGINPRO = function (req, res) {
         }
     });
 };
+var LOGINEMPRESA = function (req, res) {
+    var empresa;
+    pool.query("SELECT us.rut as rutempresa, us.email, emp.nombreempresa, emp.logo, emp.pais, emp.ciudad, emp.telefono, emp.descripcion FROM usuarios us INNER JOIN empresa emp ON emp.rutempresa=us.rut WHERE email = $1 AND clave= $2", [req.body.email, req.body.clave], function (errpool, respool) {
+        if (errpool) {
+            console.error(errpool);
+            return;
+        }
+        else {
+            for (var _i = 0, _a = respool.rows; _i < _a.length; _i++) {
+                var row = _a[_i];
+                empresa = row;
+            }
+            res.send(JSON.stringify(empresa));
+        }
+    });
+};
 module.exports = {
     LOGINCCOMUN: LOGINCCOMUN,
-    LOGINPRO: LOGINPRO
+    LOGINPRO: LOGINPRO,
+    LOGINEMPRESA: LOGINEMPRESA
 };
