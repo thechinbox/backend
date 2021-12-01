@@ -1,8 +1,11 @@
 -------------Poblar USUARIOS-----------------------------------
-INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('112223334','abc123','pro@gmail.com',2);
-INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('99999999999','abc123','empresa@gmail.com',3);
-INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('11111111111','abc123','empresa2@gmail.com',3);
-INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('22222222222','abc123','empresa3@gmail.com',3);
+INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('223334445','abc123','comun@gmail.com',1); ----Usuario Comun----
+INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('112223334','abc123','pro@gmail.com',2); ----Usuario Profesional----
+INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('99999999999','abc123','empresa@gmail.com',3); ----Usuario Profesional----
+INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('11111111111','abc123','empresa2@gmail.com',3); ----Usuario Empresa----
+INSERT INTO usuarios(rut,clave,email,idtipo ) VALUES('22222222222','abc123','empresa3@gmail.com',3); ----Usuario Empresa----
+INSERT INTO comun(rutcomun, nombres, apellidos, pais, ciudad, telefono)
+	VALUES('223334445', 'USUARIO COMUN', 'PRUEBA PRUEBA', 'Chile', 'Valparaiso', '+56911223344');
 INSERT INTO profesional(rutpro, nombres, apellidos, pais, ciudad, telefono, anoegreso, casaestudio)
 	VALUES('112223334', 'JUAN IGNACIO', 'PEREZ GONZALEZ', 'Chile', 'Valparaiso', '+56911223344', 2020, 'PUCV');
 INSERT INTO empresa(rutempresa,nombreempresa,logo,pais, ciudad, telefono, descripcion) 
