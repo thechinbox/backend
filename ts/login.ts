@@ -38,8 +38,6 @@ const LOGINPRO= (req:any, res:any) => {
             return;
         }else{
             for (let row of respool.rows) {
-                console.log(row);
-                
                 pro = row;               
             }
             res.send(JSON.stringify(pro))

@@ -29,6 +29,25 @@ const GETCURSOS = (req:any, res:any) => {
     })
 }
 
+const GETCURSOSPRO =  (req:any, res:any) => {
+    let cursos = new Array<curso>();
+    pool.query('SELECT cu.clavecurso, CONCAT(pro.nombres, \' \', pro.apellidos) as profesor, nombrecurso, descripcion FROM curso cu INNER JOIN profesional pro ON cu.rutpro = pro.rutpro  WHERE publicado = $2 AND cerrado = false AND cu.rutpro = $1',
+        [req.body.rut, req.body.publicado] , (err:any, resp:any)=>{
+        if (err) {
+            console.error(err);
+            return;
+        }else{
+            for (let row of resp.rows) {
+                let modulos = new Array<modulo>();          
+                let curso = {"clavecurso":row.clavecurso, "profesor": row.profesor, "nombrecurso": row.nombrecurso, "descripcion":row.descripcion, "modulos": modulos }              
+                cursos.push(curso)
+            }    
+        } 
+        res.send(JSON.stringify(cursos))  
+    })
+}
+
 module.exports ={
-    GETCURSOS
+    GETCURSOS,
+    GETCURSOSPRO
 }

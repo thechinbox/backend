@@ -35,7 +35,6 @@ var LOGINPRO = function (req, res) {
         else {
             for (var _i = 0, _a = respool.rows; _i < _a.length; _i++) {
                 var row = _a[_i];
-                console.log(row);
                 pro = row;
             }
             res.send(JSON.stringify(pro));

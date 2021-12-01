@@ -62,6 +62,28 @@ var POST_CURSO = function (req, res) {
         }
     });
 };
+var POSTPUBLICAR = function (req, res) {
+    pool.query('UPDATE curso SET publicado = true WHERE clavecurso = $1', [req.body.clavecurso], function (err, resp) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        else {
+            res.send(JSON.stringify({ "status": "ok" }));
+        }
+    });
+};
+var POSTCERRAR = function (req, res) {
+    pool.query('UPDATE curso SET cerrado = true WHERE clavecurso = $1', [req.body.clavecurso], function (err, resp) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        else {
+            res.send(JSON.stringify({ "status": "ok" }));
+        }
+    });
+};
 var POST_MODULO = function (req, res) {
     pool.query('INSERT INTO modulo(clavecurso, idmodulo, nombremodulo, descripcionmodulo, duracionmodulo) VALUES($1,$2,$3,$4,$5)', [Number(req.body.clavecurso.clavecurso), Number(req.body.modulo.id), req.body.modulo.nombre, req.body.modulo.descripcion, 0], function (err, resp) {
         if (err) {
@@ -74,7 +96,7 @@ var POST_MODULO = function (req, res) {
     });
 };
 var POST_CLASE = function (req, res) {
-    pool.query('INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase) VALUES($1,$2,$3,$4,$5,$6,&7)', [Number(req.body.clase.idclase), Number(req.body.idmodulo), Number(req.body.clavecurso.clavecurso), req.body.clase.nombre, req.body.clase.descripcion, req.body.clase.video, 0], function (err, resp) {
+    pool.query('INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase) VALUES($1,$2,$3,$4,$5,$6,$7)', [Number(req.body.clase.idclase), Number(req.body.idmodulo), Number(req.body.clavecurso.clavecurso), req.body.clase.nombre, req.body.clase.descripcion, req.body.clase.video, req.body.clase.duracionclase], function (err, resp) {
         if (err) {
             console.log(err);
             return;
@@ -92,5 +114,7 @@ module.exports = {
     POST_PARTC: POST_PARTC,
     POST_CURSO: POST_CURSO,
     POST_MODULO: POST_MODULO,
-    POST_CLASE: POST_CLASE
+    POST_CLASE: POST_CLASE,
+    POSTPUBLICAR: POSTPUBLICAR,
+    POSTCERRAR: POSTCERRAR
 };

@@ -67,6 +67,27 @@ const POST_CURSO = (req:any, res:any) => {
     })
 }
 
+const POSTPUBLICAR = (req:any, res:any) =>{
+    pool.query('UPDATE curso SET publicado = true WHERE clavecurso = $1',[req.body.clavecurso], (err:any, resp:any) =>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.send(JSON.stringify({"status":"ok"}))
+        }
+    })
+}
+const POSTCERRAR = (req:any, res:any) =>{
+    pool.query('UPDATE curso SET cerrado = true WHERE clavecurso = $1',[req.body.clavecurso], (err:any, resp:any) =>{
+        if(err){
+            console.log(err);
+            return;
+        }else{
+            res.send(JSON.stringify({"status":"ok"}))
+        }
+    })
+}
+
 const POST_MODULO = (req:any, res:any) => {
     pool.query('INSERT INTO modulo(clavecurso, idmodulo, nombremodulo, descripcionmodulo, duracionmodulo) VALUES($1,$2,$3,$4,$5)',
     [Number(req.body.clavecurso.clavecurso), Number(req.body.modulo.id) ,req.body.modulo.nombre, req.body.modulo.descripcion, 0], (err:any, resp:any)=>{
@@ -79,9 +100,9 @@ const POST_MODULO = (req:any, res:any) => {
     })
 }
 
-const POST_CLASE= (req:any, res:any) => {
-    pool.query('INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase) VALUES($1,$2,$3,$4,$5,$6,&7)',
-    [Number(req.body.clase.idclase),Number(req.body.idmodulo), Number(req.body.clavecurso.clavecurso), req.body.clase.nombre, req.body.clase.descripcion, req.body.clase.video, 0], (err:any, resp:any)=>{
+const POST_CLASE= (req:any, res:any) => {    
+    pool.query('INSERT INTO clase(idclase, idmodulo, clavecurso, nombreclase, descripcionclase, videoclase, duracionclase) VALUES($1,$2,$3,$4,$5,$6,$7)',
+    [Number(req.body.clase.idclase),Number(req.body.idmodulo), Number(req.body.clavecurso.clavecurso), req.body.clase.nombre, req.body.clase.descripcion, req.body.clase.video, req.body.clase.duracionclase], (err:any, resp:any)=>{
         if(err){
             console.log(err);
             return;
@@ -98,5 +119,7 @@ module.exports ={
     POST_PARTC,
     POST_CURSO,
     POST_MODULO,
-    POST_CLASE
+    POST_CLASE,
+    POSTPUBLICAR,
+    POSTCERRAR
 }
